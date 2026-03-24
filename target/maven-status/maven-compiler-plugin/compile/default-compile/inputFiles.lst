@@ -1,3 +1,4 @@
+/home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/ui/gui/ChangePasswordWindow.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/exception/KitchenOverloadException.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/model/Order.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/Main.java
@@ -9,9 +10,12 @@
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/core/SharedQueue.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/db/OrderDAO.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/model/Chef.java
+/home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/model/User.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/ui/gui/OwnerWindow.java
+/home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/ui/gui/LoginWindow.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/db/DatabaseConnection.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/db/MenuDAO.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/event/OrderUpdateListener.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/model/MenuItem.java
 /home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/model/Waiter.java
+/home/jay/Documents/javaProjects/kitchenOrderTicketKOT/src/main/java/com/kot/db/UserDAO.java

@@ -7,12 +7,17 @@ import com.kot.model.Chef;
 import com.kot.model.Order;
 import com.kot.model.Waiter;
 
+import com.kot.db.UserDAO;
+import com.kot.model.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class OwnerWindow extends JFrame implements OrderUpdateListener {
     private final SharedQueue sharedQueue;
+    private final User ownerUser;
+    private final UserDAO userDAO;
     
     // UI
     private DefaultListModel<String> queueListModel;
@@ -30,12 +35,14 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
     private int totalOrdersRejected = 0;
     private double totalRevenue = 0.0;
 
-    public OwnerWindow(SharedQueue sharedQueue) {
+    public OwnerWindow(SharedQueue sharedQueue, User ownerUser) {
         this.sharedQueue = sharedQueue;
+        this.ownerUser = ownerUser;
+        this.userDAO = new UserDAO();
         sharedQueue.addOrderUpdateListener(this);
         
-        setTitle("Owner Dashboard (Live Tracking)");
-        setSize(700, 500);
+        setTitle("Owner Dashboard - " + ownerUser.getName() + " (Live Tracking)");
+        setSize(750, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Closing owner dashboard closes app
         setLocationRelativeTo(null);
         
@@ -54,7 +61,49 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
         tabbedPane.addTab("Live Kitchen Tracking", createLivePanel());
         tabbedPane.addTab("Overall Performance", createPerformancePanel());
         tabbedPane.addTab("Manage Staff", createManageStaffPanel());
+        tabbedPane.addTab("Create Accounts", createAccountPanel());
         add(tabbedPane);
+    }
+    
+    private JPanel createAccountPanel() {
+        JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        
+        panel.add(new JLabel("Staff Full Name:"));
+        JTextField nameField = new JTextField();
+        panel.add(nameField);
+        
+        panel.add(new JLabel("Staff Role:"));
+        JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Waiter", "Chef"});
+        panel.add(roleCombo);
+        
+        JButton createBtn = new JButton("Generate Temporary Credentials");
+        panel.add(new JLabel()); // Spacer
+        panel.add(createBtn);
+        
+        createBtn.addActionListener(e -> {
+            String name = nameField.getText();
+            String role = (String) roleCombo.getSelectedItem();
+            
+            if (name.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Name cannot be empty.");
+                return;
+            }
+            
+            String[] credentials = userDAO.createUser(name.trim(), role);
+            if (credentials != null) {
+                String msg = "Account created successfully!\n\n" +
+                             "Username: " + credentials[0] + "\n" +
+                             "One-Time Password: " + credentials[1] + "\n\n" +
+                             "Please provide these to the new employee. They will be forced to change the password upon first login.";
+                JOptionPane.showMessageDialog(this, msg, "Temporary Credentials", JOptionPane.INFORMATION_MESSAGE);
+                nameField.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to create account.", "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        return panel;
     }
     
     private JPanel createLivePanel() {

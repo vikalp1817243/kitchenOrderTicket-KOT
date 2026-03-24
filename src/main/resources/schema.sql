@@ -3,6 +3,19 @@
 CREATE DATABASE IF NOT EXISTS kitchen_order_ticket;
 USE kitchen_order_ticket;
 
+-- Table to store user accounts
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    is_first_login BOOLEAN DEFAULT TRUE
+);
+
+-- Seed default owner account
+INSERT IGNORE INTO users (name, username, password, role, is_first_login) VALUES ('Restaurant Owner', 'owner', 'owner123', 'Owner', FALSE);
+
 -- Table to store the restaurant menu
 CREATE TABLE IF NOT EXISTS menu_items (
     item_code INT PRIMARY KEY,

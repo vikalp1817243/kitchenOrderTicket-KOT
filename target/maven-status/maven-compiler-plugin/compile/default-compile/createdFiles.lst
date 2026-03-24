@@ -1,6 +1,9 @@
 com/kot/ui/gui/OwnerWindow.class
 com/kot/model/MenuItem.class
+com/kot/db/UserDAO.class
+com/kot/ui/gui/ChangePasswordWindow.class
 com/kot/model/Order$Status.class
+com/kot/ui/gui/LoginWindow.class
 com/kot/core/SessionManager.class
 com/kot/model/Order.class
 com/kot/exception/KitchenOverloadException.class
@@ -14,5 +17,6 @@ com/kot/Main.class
 com/kot/ui/gui/ChefWindow.class
 com/kot/db/MenuDAO.class
 com/kot/exception/InvalidMenuCodeException.class
+com/kot/model/User.class
 com/kot/event/OrderUpdateListener.class
 com/kot/db/DatabaseConnection.class
