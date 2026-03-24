@@ -65,6 +65,12 @@ public class LoginWindow extends JFrame {
             User user = userDAO.authenticate(username, password, role);
 
             if (user != null) {
+                // Check multiple sessions
+                if (com.kot.core.SessionManager.getInstance().isUserLoggedIn(user.getUserId())) {
+                    JOptionPane.showMessageDialog(this, "This user is already logged in actively! (Close other window first)", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 // Success
                 if (user.isFirstLogin()) {
                     new ChangePasswordWindow(user, () -> launchRoleWindow(user)).setVisible(true);

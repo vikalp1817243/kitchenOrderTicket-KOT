@@ -37,6 +37,7 @@ public class WaiterWindow extends JFrame implements OrderUpdateListener {
         this.currentOrderItems = new ArrayList<>();
         
         SessionManager.getInstance().registerWaiter(this);
+        SessionManager.getInstance().registerSession(waiter.getEmployeeId());
         sharedQueue.addOrderUpdateListener(this);
         
         setTitle("Waiter Terminal - " + waiter.getName() + " (ID: " + waiter.getEmployeeId() + ")");
@@ -160,6 +161,12 @@ public class WaiterWindow extends JFrame implements OrderUpdateListener {
         JLabel infoLabel = new JLabel("<html><i>Note: These stats are read-only and automatically updated.</i></html>");
         panel.add(infoLabel);
         
+        JButton logoutBtn = new JButton("Logout & Close");
+        logoutBtn.setBackground(new Color(255, 100, 100));
+        logoutBtn.setForeground(Color.WHITE);
+        logoutBtn.addActionListener(e -> dispose());
+        panel.add(logoutBtn);
+        
         return panel;
     }
     
@@ -208,6 +215,7 @@ public class WaiterWindow extends JFrame implements OrderUpdateListener {
     public void dispose() {
         sharedQueue.removeOrderUpdateListener(this);
         SessionManager.getInstance().unregisterWaiter(this);
+        SessionManager.getInstance().unregisterSession(waiter.getEmployeeId());
         super.dispose();
     }
 }

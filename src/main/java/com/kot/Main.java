@@ -31,9 +31,36 @@ public class Main {
                     "DB Warning", JOptionPane.WARNING_MESSAGE);
             }
 
-            // 3. Launch the secure startup screen (LoginWindow)
-            LoginWindow loginWindow = new LoginWindow(sharedQueue, menuData);
-            loginWindow.setVisible(true);
+            // 3. Create persistent Launcher UI
+            JFrame launcher = new JFrame("KOT Global Launcher");
+            launcher.setSize(400, 200);
+            launcher.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            launcher.setLocationRelativeTo(null);
+            
+            JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            
+            JLabel titleLabel = new JLabel("Welcome to Kitchen Order Ticket System!", SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            
+            JButton newLoginBtn = new JButton("Open New Login Window");
+            newLoginBtn.setFont(new Font("Arial", Font.BOLD, 16));
+            
+            newLoginBtn.addActionListener(e -> {
+                // Spawn a new independent Login screen within the same JVM memory
+                LoginWindow loginWindow = new LoginWindow(sharedQueue, menuData);
+                loginWindow.setVisible(true);
+            });
+            
+            panel.add(titleLabel);
+            panel.add(new JLabel("Keep this launcher open to spawn multiple sessions.", SwingConstants.CENTER));
+            panel.add(newLoginBtn);
+            
+            launcher.add(panel);
+            launcher.setVisible(true);
+            
+            // Auto open the first login window
+            new LoginWindow(sharedQueue, menuData).setVisible(true);
         });
     }
 }

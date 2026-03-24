@@ -41,9 +41,11 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
         this.userDAO = new UserDAO();
         sharedQueue.addOrderUpdateListener(this);
         
+        SessionManager.getInstance().registerSession(ownerUser.getUserId());
+        
         setTitle("Owner Dashboard - " + ownerUser.getName() + " (Live Tracking)");
         setSize(750, 550);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Closing owner dashboard closes app
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changing to dispose to allow proper logout
         setLocationRelativeTo(null);
         
         initUI();
@@ -138,6 +140,13 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
         panel.add(new JScrollPane(performanceArea), BorderLayout.CENTER);
         
         updatePerformanceArea();
+        
+        JButton logoutBtn = new JButton("Logout & Close");
+        logoutBtn.setBackground(new Color(255, 100, 100));
+        logoutBtn.setForeground(Color.WHITE);
+        logoutBtn.addActionListener(e -> dispose());
+        panel.add(logoutBtn, BorderLayout.SOUTH);
+        
         return panel;
     }
     
@@ -190,10 +199,20 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
         
         if (selection.startsWith("Waiter")) {
             WaiterWindow w = SessionManager.getInstance().getWaiterWindow(id);
-            if (w != null) SessionManager.getInstance().unregisterWaiter(w);
+            if (w != null) {
+                w.disposeWindow(); // Force close Waiter's GUI remotely
+                JOptionPane.showMessageDialog(this, "Waiter " + id + " has been logged out and removed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else if (selection.startsWith("Chef")) {
             ChefWindow c = SessionManager.getInstance().getChefWindow(id);
-            if (c != null) SessionManager.getInstance().unregisterChef(c);
+            if (c != null) {
+                if (c.getCurrentOrder() != null) {
+                     JOptionPane.showMessageDialog(this, "Cannot remove: Chef is currently processing an order! Wait until they finish.", "Action Blocked", JOptionPane.WARNING_MESSAGE);
+                     return;
+                }
+                c.disposeWindow(); // Force close Chef's GUI remotely
+                JOptionPane.showMessageDialog(this, "Chef " + id + " has been logged out and removed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
         
         refreshStaffList();
@@ -226,5 +245,11 @@ public class OwnerWindow extends JFrame implements OrderUpdateListener {
         SwingUtilities.invokeLater(() -> {
             alertsListModel.addElement("ALERT: Order #" + order.getOrderId() + " rejected by " + order.getChefName() + " (Reason: " + order.getRejectionReason() + ")");
         });
+    }
+
+    @Override
+    public void dispose() {
+        SessionManager.getInstance().unregisterSession(ownerUser.getUserId());
+        super.dispose();
     }
 }

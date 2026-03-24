@@ -35,6 +35,7 @@ public class ChefWindow extends JFrame {
         this.sharedQueue = sharedQueue;
         
         SessionManager.getInstance().registerChef(this);
+        SessionManager.getInstance().registerSession(chef.getEmployeeId());
         
         setTitle("Chef Terminal - " + chef.getName() + " (ID: " + chef.getEmployeeId() + ")");
         setSize(500, 400);
@@ -46,6 +47,10 @@ public class ChefWindow extends JFrame {
     
     public Chef getChef() {
         return chef;
+    }
+    
+    public Order getCurrentOrder() {
+        return currentOrder;
     }
 
     private void initUI() {
@@ -157,6 +162,12 @@ public class ChefWindow extends JFrame {
         JLabel infoLabel = new JLabel("<html><i>Note: These stats are read-only and automatically updated.</i></html>");
         panel.add(infoLabel);
         
+        JButton logoutBtn = new JButton("Logout & Close");
+        logoutBtn.setBackground(new Color(255, 100, 100));
+        logoutBtn.setForeground(Color.WHITE);
+        logoutBtn.addActionListener(e -> disposeWindow());
+        panel.add(logoutBtn);
+        
         return panel;
     }
     
@@ -173,6 +184,7 @@ public class ChefWindow extends JFrame {
     }
     
     public void disposeWindow() {
+        this.setVisible(false); // Immediate visual feedback
         isRunning = false;
         if (consumerThread != null) {
             consumerThread.interrupt();
@@ -183,6 +195,7 @@ public class ChefWindow extends JFrame {
     @Override
     public void dispose() {
         SessionManager.getInstance().unregisterChef(this);
+        SessionManager.getInstance().unregisterSession(chef.getEmployeeId());
         isRunning = false;
         if (consumerThread != null) {
             consumerThread.interrupt();

@@ -16,10 +16,12 @@ public class SessionManager {
     
     private final List<WaiterWindow> activeWaiters;
     private final List<ChefWindow> activeChefs;
+    private final List<Integer> loggedInUserIds;
 
     private SessionManager() {
         this.activeWaiters = new ArrayList<>();
         this.activeChefs = new ArrayList<>();
+        this.loggedInUserIds = new ArrayList<>();
     }
 
     public static SessionManager getInstance() {
@@ -72,5 +74,17 @@ public class SessionManager {
             if (c.getChef().getEmployeeId() == id) return c;
         }
         return null;
+    }
+    
+    public synchronized boolean isUserLoggedIn(int userId) {
+        return loggedInUserIds.contains(userId);
+    }
+    
+    public synchronized void registerSession(int userId) {
+        loggedInUserIds.add(userId);
+    }
+    
+    public synchronized void unregisterSession(int userId) {
+        loggedInUserIds.remove(Integer.valueOf(userId));
     }
 }
